@@ -253,6 +253,15 @@ pub mod pallet {
 				.map_err::<Error<T, I>, _>(Into::into)
 				.map_err::<DispatchError, _>(Into::into)
 		}
+
+		#[pallet::weight(T::WeightInfo::put_in_front_of())]
+		pub fn unsafe_regenerate(origin: OriginFor<T>) -> DispatchResult {
+			List::<T, I>::unsafe_regenerate(
+				Nominators::<T>::iter().map(|(id, _)| id),
+				Pallet::<T>::weight_of_fn(),
+			);
+			Ok(())
+		}
 	}
 
 	#[pallet::hooks]
