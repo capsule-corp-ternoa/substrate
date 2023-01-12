@@ -802,6 +802,16 @@ pub mod pallet {
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
+		#[pallet::weight(T::WeightInfo::bond())]
+		pub fn unsafe_regenerate(origin: OriginFor<T>) -> DispatchResult {
+			T::VoterList::::unsafe_regenerate(
+				Nominators::<T>::iter().map(|(id, _)| id),
+				Pallet::<T>::weight_of_fn(),
+			);
+			Ok(())
+		}
+
+
 		/// Take the origin account as a stash and lock up `value` of its balance. `controller` will
 		/// be the account that controls it.
 		///
