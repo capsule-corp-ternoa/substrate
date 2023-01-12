@@ -253,6 +253,19 @@ pub mod pallet {
 				.map_err::<Error<T, I>, _>(Into::into)
 				.map_err::<DispatchError, _>(Into::into)
 		}
+
+		/// Make a call available to reset the bagslist.
+		///
+		/// The dispatch origin for this call must be root.
+		#[pallet::weight(T::WeightInfo::put_in_front_of())]
+		pub fn unsafe_regenerate(
+			origin: OriginFor<T>,
+			all: impl IntoIterator<Item = T::AccountId>,
+		) -> DispatchResult {
+			ensure_root(origin)?;
+			List::<T, I>::unsafe_regenerate(all, T::ScoreProvider::score);
+			Ok(())
+		}
 	}
 
 	#[pallet::hooks]
