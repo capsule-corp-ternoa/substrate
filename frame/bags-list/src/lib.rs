@@ -260,7 +260,7 @@ pub mod pallet {
 		#[pallet::weight(T::WeightInfo::put_in_front_of())]
 		pub fn unsafe_regenerate(
 			origin: OriginFor<T>,
-			all: impl IntoIterator<Item = T::AccountId>,
+			all: BoundedVec<T::AccountId,2000u32>,
 		) -> DispatchResult {
 			ensure_root(origin)?;
 			List::<T, I>::unsafe_regenerate(all, T::ScoreProvider::score);
